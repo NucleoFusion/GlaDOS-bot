@@ -1,3 +1,9 @@
+CREATE TABLE "github" (
+	"discord_id" bigint PRIMARY KEY NOT NULL,
+	"username" varchar(255) NOT NULL,
+	"githubname" varchar(255) NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "users" (
 	"discord_id" bigint PRIMARY KEY NOT NULL,
 	"username" varchar(255) NOT NULL,

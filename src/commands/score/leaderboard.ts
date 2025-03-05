@@ -37,7 +37,7 @@ export const command = {
 
     const leaderBoardString = topUsers
       .map((user, index) => {
-        const userMention = `<@${user.discordId}>`;
+        const userMention = `<@${user.discord_id}>`;
         return `${index}. ${userMention} — Score: ${user.score}`;
       })
       .join("\n");

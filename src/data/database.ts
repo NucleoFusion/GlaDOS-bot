@@ -1,7 +1,8 @@
 import { dbConfig, connectionString } from "./config/database.config.js";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import { UserRepository } from "./repositories/user.repository.js";
+import { UserRepository } from "@/data/repositories/user.repository.js";
+import { GithubRepository } from "./repositories/github.repository.js";
 
 /**
  * Singleton class for managing the database connection and repositories.
@@ -14,6 +15,7 @@ export class AppDatabase {
 
   // Repositories are initialized later on by initialize method
   userRepository: UserRepository | null = null;
+  githubRepository: GithubRepository | null = null;
 
   /**
    * Returns the singleton instance of AppDatabase.
@@ -86,5 +88,6 @@ export class AppDatabase {
    */
   private initializeRepositories() {
     this.userRepository = new UserRepository(this.db);
+    this.githubRepository = new GithubRepository(this.db)
   }
 }

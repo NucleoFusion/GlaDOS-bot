@@ -34,7 +34,7 @@ export const command = {
     const userModel = await repository.getUserScore(user);
 
     const embed = new EmbedBuilder().setDescription(
-      `<@${userModel.discordId}> score is: ${userModel.score}`,
+      `<@${userModel.discord_id}> score is: ${userModel.score}`,
     );
 
     await interaction.reply({ embeds: [embed] });

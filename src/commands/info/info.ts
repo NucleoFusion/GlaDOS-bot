@@ -2,7 +2,6 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import {
   printServerRoles,
   printServerInfo,
-  printUserInfo,
 } from "./subcommands/subcommands.js";
 
 export const command = {
@@ -18,17 +17,6 @@ export const command = {
       subcommand
         .setName("server")
         .setDescription("Provides information about the server."),
-    )
-    .addSubcommand((subcommand) =>
-      subcommand
-        .setName("user")
-        .setDescription("Provides information about the user.")
-        .addUserOption((option) =>
-          option
-            .setName("user")
-            .setDescription("The username to search for")
-            .setRequired(false),
-        ),
     ),
   async execute(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
@@ -39,9 +27,6 @@ export const command = {
         break;
       case "server":
         await printServerInfo(interaction);
-        break;
-      case "user":
-        await printUserInfo(interaction);
         break;
     }
   },

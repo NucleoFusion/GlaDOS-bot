@@ -24,7 +24,7 @@ export const command = {
         .setRequired(false),
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-  execute: async function (interaction: ChatInputCommandInteraction) {
+  execute: async function(interaction: ChatInputCommandInteraction) {
     const client = interaction.client as Client & AppClient;
     const user = interaction.options.getUser("user");
     const pointInput = interaction.options.getInteger("amount");

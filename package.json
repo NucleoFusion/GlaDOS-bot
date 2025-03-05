@@ -16,7 +16,7 @@
     "deploy-commands": "npm run build && node dist/deploy-commands.js",
     "lint": "eslint . ",
     "lint:fix": "eslint . --fix",
-    "migrate:create": "npm run build && drizzle-kit generate --config \"dist/data/config/drizzle.config.js\" --name",
+    "migrate:create": "npm run build && drizzle-kit generate --config \"dist/data/config/drizzle.config.js \" ",
     "migrate:apply": "tsx scripts/runMigrations.ts"
   },
   "author": "Sourceware Lab",

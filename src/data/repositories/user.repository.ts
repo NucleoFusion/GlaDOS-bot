@@ -25,12 +25,12 @@ export class UserRepository {
     await this.db
       .insert(users)
       .values({
-        discordId: BigInt(id),
+        discord_id: BigInt(id),
         username,
         score: points, // Initial score for new users
       })
       .onConflictDoUpdate({
-        target: users.discordId,
+        target: users.discord_id,
         set: {
           username,
           score: sql`${users.score} + ${points}`, // Increment score for existing users
@@ -58,19 +58,19 @@ export class UserRepository {
     await this.db
       .insert(users)
       .values({
-        discordId: BigInt(id),
+        discord_id: BigInt(id),
         username,
         score: 0, // Initial score for new users
       })
       .onConflictDoUpdate({
-        target: users.discordId,
+        target: users.discord_id,
         set: { username },
       });
 
     const [userRecord] = await this.db
       .select()
       .from(users)
-      .where(eq(users.discordId, BigInt(id)));
+      .where(eq(users.discord_id, BigInt(id)));
 
     return userRecord;
   }
