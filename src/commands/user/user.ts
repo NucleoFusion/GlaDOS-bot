@@ -3,33 +3,21 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import info from "./subcommands/info.js";
+import { GetFormattedResponse, UserStats } from "./modules/Response.js";
+import { Client } from "pg";
+import { AppClient } from "@/index.js";
+
 
 export const command = {
   data: new SlashCommandBuilder()
     .setName("user")
     .setDescription("Provides information about the user.")
 
-    .addSubcommand(subcommand => subcommand
-      .setName("info")
-      .setDescription("gives info of a certain user.")
-      .addUserOption((option) =>
-        option
-          .setName("user")
-          .setDescription("The username to search for")
-          .setRequired(false),
-      )
-    )
-
-    .addSubcommand(subcommand => subcommand
-      .setName("attach")
-      .setDescription("attaches github name of a user.")
-      .addUserOption((option) =>
-        option
-          .setName("user")
-          .setDescription("The username to search for")
-          .setRequired(false),
-      )
+    .addUserOption((option) =>
+      option
+        .setName("user")
+        .setDescription("The username to search for")
+        .setRequired(true),
     ),
 
   async execute(interaction: ChatInputCommandInteraction) {
@@ -42,17 +30,49 @@ export const command = {
       return;
     }
 
-    const subcommand = interaction.options.getSubcommand();
+    const user = interaction.options.getUser("user") ?? interaction.user;
 
-    switch (subcommand) {
-      case "info":
-        info(interaction)
-        break;
-
-      case "attach":
-        console.log("Attached");
-        break;
+    if (!user) {
+      await interaction.reply("User Not Found");
+      return;
     }
+
+    const member = await interaction.guild?.members.fetch(user.id);
+
+    if (!member) {
+      await interaction.reply("User Not Found");
+      return;
+    }
+
+    const client = interaction.client as Client & AppClient;
+
+    const repository = client.db.userRepository;
+
+    if (!repository) {
+      await interaction.reply({
+        content: "db not initalised",
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+    const userModel = await repository.getUserScore(user);
+
+    const userStats: UserStats = {
+      displayName: member.displayName,
+      createdAt: user.createdAt,
+      joinedAt: (member.joinedAt) ? member.joinedAt : new Date(),
+      avatar: user.displayAvatarURL(),
+      roles: [...member.roles.cache.values()], //To get the roles as a Role[] instead of a Collection<string,Role>
+      score: userModel.score,
+    }
+
+    const embed = GetFormattedResponse(userStats)
+
+    // Build a display string for the embed.
+    await interaction.reply({
+      embeds: [embed],
+      allowedMentions: { roles: [] }, // This prevents role pings
+    });
   }
 }
 

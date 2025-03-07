@@ -3,12 +3,13 @@ import {
   bigint,
   varchar,
 } from "drizzle-orm/pg-core";
+import { users } from "./user.model.js";
 
 /**
  * Defines the `github` table schema.
  */
 export const github = pgTable("github", {
-  discord_id: bigint({ mode: "bigint" }).primaryKey(),
+  discord_id: bigint({ mode: "bigint" }).primaryKey().references(() => users.discord_id),
   username: varchar("username", { length: 255 }).notNull(),
   githubname: varchar("githubname", { length: 255 }).notNull()
 });

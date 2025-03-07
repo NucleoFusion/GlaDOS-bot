@@ -15,16 +15,24 @@ export class GithubRepository {
     this.db = db;
   }
 
-  async insertGithubDetails(user: DiscordUser, githubName: string): Promise<void> {
+  async insertGithubDetails(user: DiscordUser, githubName: string): Promise<Error | null> {
     const { id, username } = user;
 
-    await this.db
+    const res = await this.db
       .insert(github)
       .values({
         discord_id: BigInt(id),
         username: username,
         githubname: githubName
       })
+      .onConflictDoNothing()
+      .execute() //returns metadata
+
+    if (res.rowCount === 0) { //Checks if any change occured, since no change occuring means conflict happened
+      return new Error('user already exists')
+    }
+
+    return null;
   }
 
   async getGithubDetails(): Promise<GithubUser[]> {
