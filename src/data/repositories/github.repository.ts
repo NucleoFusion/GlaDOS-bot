@@ -35,7 +35,11 @@ export class GithubRepository {
     return null;
   }
 
-  async getGithubDetails(): Promise<GithubUser[]> {
+  async getGithub(user: DiscordUser) {
+    const { id } = user;
+  }
+
+  async getAllRecords(): Promise<GithubUser[]> {
 
     return await this.db
       .select()
